@@ -13,12 +13,22 @@ provider "archive" {}
 
 data "aws_caller_identity" "current" {}
 
+locals {
+  tags = {
+    Owner       = var.owner
+    ProjectName = var.project_name
+  }
+
+  s3_bucket_name           = "wordpress-${lower(terraform.workspace)}"
+}
+
 /*
   --- ECS ---
 */
 
 module "ecs" {
   source       = "./modules/ecs"
+  tags         = local.tags
   project_name = var.project_name
   region       = var.region
 }
