@@ -5,18 +5,25 @@ resource "aws_cloudwatch_log_group" "wordpress_log_group" {
   tags              = var.tags
 }
 
-resource "aws_ecr_repository" "terraform_ecs" {
-  name = "terraform-ecs"
+resource "aws_ecr_repository" "wordpress_ecs" {
+  name = "${lower(var.project_name)}-${lower(terraform.workspace)}"
+  tags = var.tags
 }
 
-resource "aws_ecs_cluster" "terraform_ecs_cluster" {
-  name = "${var.project_name}-Cluster-${terraform.workspace}"
-}
-
-resource "aws_ecs_cluster" "terraform_ecs_app_cluster" {
+resource "aws_ecs_cluster" "wordpress_ecs_cluster" {
   name = "${var.project_name}-Cluster-${terraform.workspace}"
   tags = var.tags
 }
+
+data "template_file" "wordpress_service_task_template" {
+  template = file("${path.module}/templates/task_template.json")
+
+  vars = {
+    repository_url = aws_ecr_repository.wordpress_ecs.repository_url
+    container_name = "${var.project_name}-Task-${terraform.workspace}"
+    log_group      = aws_cloudwatch_log_group.wordpress_log_group.name
+    region         = var.region
+  }
 
 # /*
 #   --- Module(s) ---
