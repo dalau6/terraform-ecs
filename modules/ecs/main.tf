@@ -29,11 +29,11 @@ data "template_file" "wordpress_service_task_template" {
 #   --- Module(s) ---
 # */
 
-# module "iam" {
-#   source       = "./modules/iam"
-#   tags         = var.tags
-#   project_name = var.project_name
-# }
+module "iam" {
+  source       = "./modules/iam"
+  tags         = var.tags
+  project_name = var.project_name
+}
 
 /*
   --- Task(s) ---
