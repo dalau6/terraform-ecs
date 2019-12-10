@@ -38,22 +38,29 @@ module "iam" {
 /*
   --- Task(s) ---
 */
-resource "aws_ecs_task_definition" "terraform_ecs_task" {
+resource "aws_ecs_task_definition" "wordpress_task" {
   family                   = "${var.project_name}-Task-${terraform.workspace}"
-  container_definitions    = data.template_file.terraform_ecs_task_template.rendered
+  container_definitions    = data.template_file.wordpress_task_template.rendered
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = "1024"
   memory                   = "2048"
+  # execution_role_arn       = module.iam.wordpress_service_execution_role_arn
+  # task_role_arn            = module.iam.wordpress_service_task_role_arn
 }
 
 /*
   --- ECS Service(s) ---
 */
-resource "aws_ecs_service" "terraform_ecs_service" {
+resource "aws_ecs_service" "wordpress_service" {
   name            = "${var.project_name}-${terraform.workspace}"
-  task_definition = aws_ecs_task_definition.terraform_ecs_task.arn
+  task_definition = aws_ecs_task_definition.wordpress_task.arn
   desired_count   = 1
   launch_type     = "FARGATE"
-  cluster         = aws_ecs_cluster.terraform_ecs_service_cluster.id
+  cluster         = aws_ecs_cluster.wordpress_service_cluster.id
+
+  # network_configuration {
+  #   security_groups = [""]
+  #   subnets         = [""]
+  # }
 }
