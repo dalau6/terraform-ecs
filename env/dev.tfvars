@@ -1,4 +1,4 @@
-project_name = "Terraform-ECS"
+project_name = "Terraform-WordPress"
 
 owner = "owner"
 

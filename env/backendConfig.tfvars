@@ -1,9 +1,9 @@
 encrypt = true
 
-bucket = "mybucket"
+bucket = "wordpress-terraform-backends"
 
 dynamodb_table = "terraform-state-lock"
 
-key = "terraform-ecs/terraform.tfstate"
+key = "terraform-wordpress/terraform.tfstate"
 
 region = "us-west-2"
