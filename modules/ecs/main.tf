@@ -1,3 +1,10 @@
+// Cloudwatch log group
+resource "aws_cloudwatch_log_group" "wordpress_log_group" {
+  name              = "ecs/${var.project_name}-${terraform.workspace}"
+  retention_in_days = 14
+  tags              = var.tags
+}
+
 resource "aws_ecr_repository" "terraform_ecs" {
   name = "terraform-ecs"
 }
